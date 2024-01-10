@@ -6,6 +6,8 @@ import java.net.http.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
+import okhttp3.*;
+
 public class APIClient {
     //private static final String baseUrl = "https://b02.isp2.ukwhatn.com/";
     private static final String baseUrl = "http://localhost:58080/";
@@ -22,17 +24,26 @@ public class APIClient {
         }
 
         // クライアント準備
-        HttpClient client = HttpClient.newHttpClient();
+        OkHttpClient client = new OkHttpClient();
 
         // リクエスト送信
         System.out.print("doGET: " + baseUrl + path);
-        HttpResponse<String> response = client.send(HttpRequest.newBuilder()
-                .uri(URI.create(baseUrl + path))
-                .header("Cookie", backendCookieString)
-                .build(), HttpResponse.BodyHandlers.ofString());
-        String cookieString = String.valueOf(response.headers().firstValue("Set-Cookie"));
-        System.out.println(" -> " + response.statusCode() + " " + response.body() + " " + cookieString);
-        return new ResponseData(response.statusCode(), response.body(), cookieString);
+        Request request = new Request.Builder()
+                .url(baseUrl + path)
+                .addHeader("Cookie", backendCookieString)
+                .build();
+        Response response = client.newCall(request).execute();
+        String cookieString = response.header("Set-Cookie");
+        Integer statusCode = response.code();
+        ResponseBody body = response.body();
+
+        String bodyString = "<NULL>";
+        if (body != null) {
+            bodyString = body.string();
+        }
+
+        System.out.println(" -> " + statusCode + " " + bodyString + " " + cookieString);
+        return new ResponseData(statusCode, bodyString, cookieString);
     }
 
     public static ResponseData post(String path, String body, String backendCookieString) throws IOException, InterruptedException {
@@ -47,18 +58,28 @@ public class APIClient {
         }
 
         // クライアント準備
-        HttpClient client = HttpClient.newHttpClient();
+        OkHttpClient client = new OkHttpClient();
 
         // リクエスト送信
         System.out.print("doPOST: " + baseUrl + path + " " + body);
-        HttpResponse<String> response = client.send(HttpRequest.newBuilder()
-                .uri(URI.create(baseUrl + path))
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(body))
-                .build(), HttpResponse.BodyHandlers.ofString());
-        String cookieString = String.valueOf(response.headers().firstValue("Set-Cookie"));
-        System.out.println(" -> " + response.statusCode() + " " + response.body() + " " + cookieString);
-        return new ResponseData(response.statusCode(), response.body(), cookieString);
+        RequestBody requestBody = RequestBody.create(body, MediaType.parse("application/json; charset=utf-8"));
+        Request request = new Request.Builder()
+                .url(baseUrl + path)
+                .addHeader("Cookie", backendCookieString)
+                .post(requestBody)
+                .build();
+        Response response = client.newCall(request).execute();
+        String cookieString = response.header("Set-Cookie");
+        Integer statusCode = response.code();
+        ResponseBody responseBody = response.body();
+
+        String responseBodyString = "<NULL>";
+        if (responseBody != null) {
+            responseBodyString = responseBody.string();
+        }
+
+        System.out.println(" -> " + statusCode + " " + responseBodyString + " " + cookieString);
+        return new ResponseData(statusCode, responseBodyString, cookieString);
     }
 
 }
