@@ -1,6 +1,7 @@
 package template;
 
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,6 +19,15 @@ public class TemplateServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                System.out.println(cookie.getName());
+            }
+        }
+
+        response.addCookie(new Cookie("test", "test"));
+
         JSONObject json = new JSONObject();
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
