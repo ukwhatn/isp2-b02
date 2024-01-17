@@ -4,12 +4,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>isp2-b02</title>
-    <script src="main.js"></script>
+    <title>ISP2-B02</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
+          crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+            crossorigin="anonymous"></script>
     <link rel="stylesheet" href="main.css">
+    <script src="common/common.js"></script>
+    <script src="main.js"></script>
 </head>
-
 <body>
+<header>
+    <nav class="navbar navbar-expand-md bg-body-tertiary">
+        <div class="container-md">
+            <a class="navbar-brand" href="/isp2">ISP2-B02</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="logout()">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<main>
+    <!-- 投稿フォーム -->
+    <div class="container-md mx-auto">
+        <div class="row">
+            <div class="col-md-6 mx-auto">
+                <h1 class="my-3">新規投稿</h1>
+                <form action="/isp2/notes" method="POST" class="my-3">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">タイトル</label>
+                        <input type="text" class="form-control" id="title" name="title">
+                    </div>
+                    <div class="mb-3">
+                        <label for="content" class="form-label">内容</label>
+                        <textarea class="form-control" id="content" name="content" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">投稿</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 投稿一覧 -->
+    <div class="container-md mx-auto">
+        <div class="row">
+            <div class="col-md-6 mx-auto">
+                <h1 class="my-3">あなたの投稿</h1>
+                <div id="notes">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- モーダル -->
+    <div class="modal" tabindex="-1" id="noteModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="noteModalTitle"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="noteModalContent"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
 </body>
 
 </html>

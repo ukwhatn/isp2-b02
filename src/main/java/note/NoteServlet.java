@@ -1,23 +1,24 @@
-package test;
+package note;
 
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.json.JSONObject;
+import util.APIClient;
+import util.ResponseData;
 
 import java.io.IOException;
 import java.io.Serial;
 
-import util.*;
-
-@WebServlet({"/test"})
-public class TestServlet extends HttpServlet {
+@WebServlet({"/note"})
+public class NoteServlet extends HttpServlet {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    public TestServlet() {
+    public NoteServlet() {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -36,14 +37,11 @@ public class TestServlet extends HttpServlet {
 
         ResponseData backendResponse = null;
 
-        JSONObject json = new JSONObject();
-        json.put("name", "hahaha11");
-        json.put("password", "owowowow");
+        // パラメータからidを取得
+        String id = request.getParameter("id");
 
         try {
-            backendResponse = APIClient.get("api/actor", backendCookieString);
-            //backendResponse = APIClient.post("api/session", json.toString(), backendCookieString);
-            //backendResponse = APIClient.post("api/actor",  json.toString(), backendCookieString);
+            backendResponse = APIClient.get("api/note/" + id, backendCookieString);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
